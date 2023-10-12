@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "CppUnitTest.h"
-#include "ConsoleApplication21.h"
+#include "ComplexNumber.h"
 #include <math.h>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
