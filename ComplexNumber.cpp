@@ -1,106 +1,97 @@
-﻿#include <iostream>
+#include "ComplexNumber.h"
+#include <iostream>
 
-class ComplexNumber {
+ComplexNumber::ComplexNumber(double real, double imaginary) : real(real), imaginary(imaginary) {}
 
-private:
-    double real;
-    double imaginary;
+double ComplexNumber::GetReal() const {
+    return real;
+}
 
-public:
+double ComplexNumber::GetImaginary() const {
+    return imaginary;
+}
 
-    friend std::ostream& operator <<(std::ostream&, const ComplexNumber&);
+void ComplexNumber::SetReal(const double value) {
+    real = value;
+}
 
-    ComplexNumber(double real, double imaginary) : real(real), imaginary(imaginary) {}
+void ComplexNumber::SetImaginary(const double value) {
+    imaginary = value;
+}
 
-    double GetReal() const {
-        return real;
+ComplexNumber ComplexNumber::operator +(const ComplexNumber& other) {
+    double new_real = real + other.real;
+    double new_imaginary = imaginary + other.imaginary;
+    return ComplexNumber(new_real, new_imaginary);
+}
+
+ComplexNumber ComplexNumber::operator -(const ComplexNumber& other) {
+    double new_real = real - other.real;
+    double new_imaginary = imaginary - other.imaginary;
+    return ComplexNumber(new_real, new_imaginary);
+}
+
+ComplexNumber ComplexNumber::operator *(const ComplexNumber& other) {
+    double new_real = real * other.real - imaginary * other.imaginary;
+    double new_imaginary = real * other.imaginary + other.real * imaginary;
+    return ComplexNumber(new_real, new_imaginary);
+}
+
+ComplexNumber ComplexNumber::operator /(const ComplexNumber& other) {
+    double denominator = other.real * other.real + other.imaginary * other.imaginary;
+    double eps = 1e-5;
+    if (std::fabs(denominator) < eps) {
+        throw std::overflow_error("Divide by zero exception");
     }
+    double new_real = (real * other.real + imaginary * other.imaginary) / denominator;
+    double new_imaginary = (other.real * imaginary - real * other.imaginary) / denominator;
+    return ComplexNumber(new_real, new_imaginary);
+}
 
-    double GetImaginary() const {
-        return imaginary;
-    }
+ComplexNumber& ComplexNumber::operator +=(const ComplexNumber& other) {
+    real = (*this + other).real;
+    imaginary = (*this + other).imaginary;
+    return *this;
+}
 
-    void SetReal(const double value) {
-        real = value;
-    }
+ComplexNumber& ComplexNumber::operator -=(const ComplexNumber& other) {
+    real = (*this - other).real;
+    imaginary = (*this - other).imaginary;
+    return *this;
+}
 
-    void SetImaginary(const double value) {
-        imaginary = value;
-    }
+ComplexNumber& ComplexNumber::operator *=(const ComplexNumber& other) {
+    real = (*this * other).real;
+    imaginary = (*this * other).imaginary;
+    return *this;
+}
 
-    ComplexNumber operator +(const ComplexNumber& other) {
-        double new_real = real + other.real;
-        double new_imaginary = imaginary + other.imaginary;
-        return ComplexNumber(new_real, new_imaginary);
-    }
+ComplexNumber& ComplexNumber::operator /=(const ComplexNumber& other) {
+    real = (*this / other).real;
+    imaginary = (*this / other).imaginary;
+    return *this;
+}
 
-    ComplexNumber operator -(const ComplexNumber& other) {
-        double new_real = real - other.real;
-        double new_imaginary = imaginary - other.imaginary;
-        return ComplexNumber(new_real, new_imaginary);
-    }
+bool ComplexNumber::operator ==(const ComplexNumber& other) {
+    return (real == other.real && imaginary == other.imaginary);
+}
 
-    ComplexNumber operator *(const ComplexNumber& other) {
-        double new_real = real * other.real - imaginary * other.imaginary;
-        double new_imaginary = real * other.imaginary + other.real * imaginary;
-        return ComplexNumber(new_real, new_imaginary);
-    }
+bool ComplexNumber::operator ==(const double& other) {
+    double eps = 1e-5;
+    return (real = other && std::fabs(imaginary) < eps);
+}
 
-    ComplexNumber operator /(const ComplexNumber& other) {
-        double denominator = other.real * other.real + other.imaginary * other.imaginary;
-        double eps = 1e-5;
-        if (std::fabs(denominator) < eps) {
-            throw std::overflow_error("Divide by zero exception");
-        }
-        double new_real = (real * other.real + imaginary * other.imaginary) / denominator;
-        double new_imaginary = (other.real * imaginary - real * other.imaginary) / denominator;
-        return ComplexNumber(new_real, new_imaginary);
-    }
+double ComplexNumber::Abs() const {
+    return std::sqrt(real * real + imaginary * imaginary);
+}
 
-    ComplexNumber& operator +=(const ComplexNumber& other) {
-        real = (*this + other).real;
-        imaginary = (*this + other).imaginary;
-        return *this;
-    }
-
-    ComplexNumber& operator -=(const ComplexNumber& other) {
-        real = (*this - other).real;
-        imaginary = (*this - other).imaginary;
-        return *this;
-    }
-
-    ComplexNumber& operator *=(const ComplexNumber& other) {
-        real = (*this * other).real;
-        imaginary = (*this * other).imaginary;
-        return *this;
-    }
-
-    ComplexNumber& operator /=(const ComplexNumber& other) {
-        real = (*this / other).real;
-        imaginary = (*this / other).imaginary;
-        return *this;
-
-    bool operator ==(const ComplexNumber& other) {
-        return (real == other.real && imaginary == other.imaginary);
-    }
-
-    bool operator ==(const double& other) {
-        double eps = 1e-5;
-        return (real = other && std::fabs(imaginary) < eps);
-    }
-
-    double Abs() const {
-        return std::sqrt(real * real + imaginary * imaginary);
-    }
-
-    ComplexNumber Pow(int degree) const {
-        double r = std::pow(this->Abs(), degree);
-        double phi = std::atan2(imaginary, real);
-        double new_real = r * std::cos(degree * phi);
-        double new_imaginary = r * std::sin(degree * phi);
-        return ComplexNumber(new_real, new_imaginary);
-    }
-};
+ComplexNumber ComplexNumber::Pow(int degree) const {
+    double r = std::pow(this->Abs(), degree);
+    double phi = std::atan2(imaginary, real);
+    double new_real = r * std::cos(degree * phi);
+    double new_imaginary = r * std::sin(degree * phi);
+    return ComplexNumber(new_real, new_imaginary);
+}
 
 std::ostream& operator << (std::ostream& out, const ComplexNumber& num)
 {
