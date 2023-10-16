@@ -27,4 +27,13 @@ public:
     ComplexNumber Pow(int degree) const;
 };
 
-std::ostream& operator << (std::ostream& out, const ComplexNumber& num);
+std::ostream& operator << (std::ostream& out, const ComplexNumber& num)
+{
+    if (num.imaginary < 0) {
+        out << num.real << num.imaginary << "i\n";
+    }
+    else {
+        out << num.real << "+" << num.imaginary << "i\n";
+    }
+    return out;
+}
