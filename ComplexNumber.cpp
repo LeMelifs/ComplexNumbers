@@ -1,5 +1,4 @@
 #include "ComplexNumber.h"
-#include <iostream>
 
 ComplexNumber::ComplexNumber(double real, double imaginary) : real(real), imaginary(imaginary) {}
 
