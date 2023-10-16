@@ -1,3 +1,4 @@
+#incude <iostream>
 #include "ComplexNumber.h"
 
 ComplexNumber::ComplexNumber(double real, double imaginary) : real(real), imaginary(imaginary) {}
@@ -90,4 +91,15 @@ ComplexNumber ComplexNumber::Pow(int degree) const {
     double new_real = r * std::cos(degree * phi);
     double new_imaginary = r * std::sin(degree * phi);
     return ComplexNumber(new_real, new_imaginary);
+}
+
+std::ostream& operator << (std::ostream& out, const ComplexNumber& num)
+{
+    if (num.imaginary < 0) {
+        out << num.real << num.imaginary << "i\n";
+    }
+    else {
+        out << num.real << "+" << num.imaginary << "i\n";
+    }
+    return out;
 }
